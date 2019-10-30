@@ -7,11 +7,6 @@
         "address": "0.0.0.0",
         "port_value": "${METRICS_PORT}"
       }
-    },
-    "override_endpoint_paths": {
-      "/metrics": {
-        "path": "/stats/prometheus"
-      }
     }
   },
   "static_resources": {
