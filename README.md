@@ -20,6 +20,10 @@ spec:
     metadata:
       labels:
         app: nginx
+      annotations:
+        prometheus.io/path: /stats/prometheus
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '9901'
     spec:
       containers:
       - name: nginx
