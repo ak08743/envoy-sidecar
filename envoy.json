@@ -1,17 +1,25 @@
 {
-  "watchdog": {},
-  "cluster_manager": {},
   "admin": {
     "access_log_path": "/dev/stdout",
     "address": {
       "socket_address": {
-        "protocol": "TCP",
         "address": "0.0.0.0",
-        "port_value": "${METRICS_PORT}"
+        "port_value": "${METRICS_PORT}",
+        "protocol": "TCP"
       }
     }
   },
+  "cluster_manager": {},
   "static_resources": {
+    "clusters": [
+      {
+        "connect_timeout": "10s",
+        "dns_lookup_family": "V4_ONLY",
+        "lb_policy": "ORIGINAL_DST_LB",
+        "name": "opsani_canary_proxy",
+        "type": "ORIGINAL_DST"
+      }
+    ],
     "listeners": [
       {
         "address": {
@@ -22,40 +30,78 @@
         },
         "filter_chains": [
           {
+            "filter_chain_match": {
+              "application_protocols": []
+            },
+            "filters": [
+              {
+                "name": "envoy.tcp_proxy",
+                "config": {
+                  "stat_prefix": "opsani_canary_proxy_tcp",
+                  "cluster": "opsani_canary_proxy",
+                  "access_log": [
+                    {
+                      "name": "envoy.file_access_log",
+                      "config": {
+                        "path": "/dev/stdout"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "filter_chain_match": {
+              "application_protocols": [
+                "http/1.0",
+                "http/1.1",
+                "h2c",
+                "h2"
+              ]
+            },
             "filters": [
               {
                 "name": "envoy.http_connection_manager",
                 "typed_config": {
+                  "@type": "type.googleapis.com/envoy.config.filter.network.http_connection_manager.v2.HttpConnectionManager",
+                  "codec_type": "auto",
                   "http_filters": [
                     {
                       "name": "envoy.router",
                       "typed_config": {}
                     }
                   ],
-                  "stat_prefix": "ingress_http",
                   "route_config": {
+                    "name": "local_service",
                     "virtual_hosts": [
                       {
                         "domains": [
                           "*"
                         ],
+                        "name": "backend",
                         "routes": [
                           {
-                            "route": {
-                              "cluster": "opsani_canary_proxy"
-                            },
                             "match": {
                               "prefix": "/"
+                            },
+                            "route": {
+                              "cluster": "opsani_canary_proxy"
                             }
                           }
-                        ],
-                        "name": "backend"
+                        ]
                       }
-                    ],
-                    "name": "local_service"
+                    ]
                   },
-                  "@type": "type.googleapis.com/envoy.config.filter.network.http_connection_manager.v2.HttpConnectionManager",
-                  "codec_type": "auto"
+                  "stat_prefix": "opsani_canary_proxy_http",
+                  "access_log": [
+                    {
+                      "name": "envoy.file_access_log",
+                      "config": {
+                        "path": "/dev/stdout"
+                      }
+                    }
+                  ]
                 }
               }
             ]
@@ -65,19 +111,15 @@
           {
             "name": "envoy.listener.original_dst",
             "typed_config": {}
+          },
+          {
+            "name": "envoy.listener.http_inspector",
+            "typed_config": {}
           }
         ]
       }
-    ],
-    "clusters": [
-      {
-        "name": "opsani_canary_proxy",
-        "type": "ORIGINAL_DST",
-        "connect_timeout": "10s",
-        "lb_policy": "ORIGINAL_DST_LB",
-        "dns_lookup_family": "V4_ONLY"
-      }
     ]
-  }
+  },
+  "watchdog": {}
 }
 
