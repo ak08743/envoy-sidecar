@@ -21,7 +21,7 @@
                   cluster: service_${PORT}
                   retry_policy:
                     retry_on: "5xx"
-                    num_retries: 3
+                    num_retries: 5
                     per_try_timeout: 2s
           stat_prefix: ingress_http
         name: envoy.http_connection_manager

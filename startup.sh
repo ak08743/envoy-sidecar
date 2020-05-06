@@ -1,5 +1,5 @@
 #!/bin/bash
-CONFIG="/tmp/envoy.yaml"
+CONFIG="/etc/envoy.yaml"
 
 {
   cat header.yaml.template | envsubst
