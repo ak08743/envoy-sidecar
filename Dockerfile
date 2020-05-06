@@ -1,16 +1,16 @@
 #FROM lyft/envoy:latest
-FROM envoyproxy/envoy:latest
+FROM envoyproxy/envoy:v1.14.1
 
 RUN apt-get update && apt-get -q install -y curl dnsutils tcpdump wget procps gettext-base
 
-COPY envoy.json.template /etc/envoy.json.template
+COPY header.yaml.template backend.yaml.template listener.yaml.template /
 COPY startup.sh /
 
 RUN chmod +x /startup.sh
 
-ENV LISTEN_PORT=8080  \
-    SERVICE_PORT=80   \
-    METRICS_PORT=9901
+ENV PROXY_PORTS="8080"  \
+    METRICS_PORT="9901" \
+    SERVICE_HOST="127.0.0.1"
 
 CMD /startup.sh
 

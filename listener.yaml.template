@@ -1,0 +1,23 @@
+  - address:
+      socket_address: {address: 0.0.0.0, port_value: '${PORT}'}
+    filter_chains:
+    - filters:
+      - config:
+          access_log:
+          - config: {path: /dev/null}
+            name: envoy.file_access_log
+          codec_type: auto
+          http_filters:
+          - config: {}
+            name: envoy.router
+          route_config:
+            name: local_route
+            virtual_hosts:
+            - domains: ['*']
+              name: service
+              routes:
+              - match: {prefix: /}
+                route: {cluster: service_${PORT}}
+          stat_prefix: ingress_http
+        name: envoy.http_connection_manager
+

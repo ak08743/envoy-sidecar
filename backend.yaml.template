@@ -1,0 +1,6 @@
+  - connect_timeout: 10s
+    hosts:
+    - socket_address: {address: '${SERVICE_HOST}', port_value: '${PORT}'}
+    name: service_${PORT}
+    type: strict_dns
+
