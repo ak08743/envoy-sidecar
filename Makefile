@@ -1,5 +1,5 @@
-IMG_NAME ?= ak9164515/envoy-sidecar
-IMG_TAG ?= experimental
+IMG_NAME ?= opsani/envoy-proxy
+IMG_TAG ?= v3
 
 container:
 	docker build . -t $(IMG_NAME):$(IMG_TAG)

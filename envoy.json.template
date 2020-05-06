@@ -71,11 +71,12 @@
     "clusters": [
       {
         "name": "service",
+        "type": "strict_dns",
         "connect_timeout": "10s",
         "hosts": [
           {
             "socket_address": {
-              "address": "127.0.0.1",
+              "address": "${SERVICE_HOST}",
               "port_value": "${SERVICE_PORT}"
             }
           }
