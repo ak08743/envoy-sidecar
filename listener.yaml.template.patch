@@ -1,0 +1,16 @@
+--- listener.yaml.template.orig	2020-05-06 04:04:41.233468079 +0000
++++ listener.yaml.template	2020-05-06 04:08:23.558534192 +0000
+@@ -17,7 +17,12 @@
+               name: service
+               routes:
+               - match: {prefix: /}
+-                route: {cluster: service_${PORT}}
++                route:
++                  cluster: service_${PORT}
++                  retry_policy:
++                    retry_on: "5xx"
++                    num_retries: 2
++                    per_try_timeout: 2s
+           stat_prefix: ingress_http
+         name: envoy.http_connection_manager
+ 
