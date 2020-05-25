@@ -1,5 +1,5 @@
 IMG_NAME ?= opsani/envoy-proxy
-IMG_TAG ?= v3
+IMG_TAG ?= v4
 
 container:
 	docker build . -t $(IMG_NAME):$(IMG_TAG)

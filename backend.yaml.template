@@ -3,4 +3,10 @@
     - socket_address: {address: '${SERVICE_HOST}', port_value: '${PORT}'}
     name: service_${PORT}
     type: strict_dns
+    circuit_breakers:
+      thresholds:
+        max_retries: 1000
+        max_pending_requests: 30000
+        max_requests: 30000
+
 
