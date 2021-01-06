@@ -1,12 +1,23 @@
-  - connect_timeout: 10s
+  - connect_timeout: 0.250s
     hosts:
-    - socket_address: {address: '${SERVICE_HOST}', port_value: '${PORT}'}
+    - socket_address:
+        address: '${SERVICE_HOST}'
+        port_value: '${PORT}'
     name: service_${PORT}
     type: strict_dns
     circuit_breakers:
       thresholds:
         max_retries: 1000
         max_pending_requests: 30000
-        max_requests: 30000
-
+        max_requests: 1000000
+        max_connections: 1000000
+    common_http_protocol_options:
+      idle_timeout: 58s
+    connect_timeout: 0.250s
+    dns_lookup_family: V4_ONLY
+    upstream_connection_options:
+      tcp_keepalive:
+        keepalive_interval: 60
+        keepalive_probes: 2
+        keepalive_time: 30
 

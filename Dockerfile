@@ -1,5 +1,5 @@
 #FROM lyft/envoy:latest
-FROM envoyproxy/envoy:v1.14.1
+FROM opsani/envoy:v6
 
 RUN apt-get update && apt-get -q install -y curl dnsutils tcpdump wget procps gettext-base
 
